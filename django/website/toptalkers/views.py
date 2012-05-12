@@ -85,7 +85,7 @@ class TableView(TemplateView):
 		talkers = []
 
 		for i, v in enumerate(varBinds):
-			print "%s: %s" % (i, v)
+			# print "%s: %s" % (i, v)
 			objectName, objectValue = v[0]
 			assert len(objectName) > len(cnfTopFlowsTable)
 			# print "%s == %s" % (objectName[:len(cnfTopFlowsTable)], cnfTopFlowsTable)
@@ -94,7 +94,7 @@ class TableView(TemplateView):
 				# cisco returns objects that it shouldn't?
 				continue
 			suffix = objectName[len(cnfTopFlowsTable):]
-			print "%s = %s" % (suffix, objectValue)
+			# print "%s = %s" % (suffix, objectValue)
 	
 			rowIndex = suffix[2] - 1
 			assert rowIndex <= len(talkers)
