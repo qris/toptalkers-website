@@ -1,4 +1,34 @@
-# Install
+# Top Talkers
+
+A web interface to a Cisco router's Top Talkers table, for simple
+bandwidth usage monitoring.
+
+## Getting Started
+
+Edit settings.py and change the following settings to match your site:
+
+* `TOPTALKERS_ROUTER` (the IP address of the Cisco router with Top
+Talkers enabled)
+* `TOPTALKERS_COMMUNITY` (the community string for read-only access to
+the Top Talkers table on the router)
+
+Then run:
+
+	deploy/tasks.py deploy:dev
+	django/website/manage.py update_ve
+	django/website/manage.py runserver
+
+For Apache web server integration, look at the sample configuration
+files in the `apache` directory.
+
+## Automated Deployment
+
+If you're not Aptivate and you want to use automated deployment, you'll
+most likely need to change some files and settings. The server which you
+deploy to will need to pull a copy of the source, *with* your changes,
+from a Git repository somewhere. Therefore, you'll need to put a fork of
+the project into your own repository, change the settings, and deploy
+that.
 
 After cloning this project, go into the deploy directory, edit fabfile.py
 and check the repository settings:

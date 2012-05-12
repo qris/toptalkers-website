@@ -97,12 +97,15 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    )
+   
+"""
     'cms.middleware.multilingual.MultilingualURLMiddleware',
     'cms.middleware.page.CurrentPageMiddleware',
     'cms.middleware.user.CurrentUserMiddleware',
     'cms.middleware.toolbar.ToolbarMiddleware',
     'cms_redirects.middleware.RedirectFallbackMiddleware',
-)
+"""
 
 ROOT_URLCONF = 'urls'
 
@@ -119,8 +122,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
-    'cms.context_processors.media',
-    'sekizai.context_processors.sekizai',
+    # 'cms.context_processors.media',
+    # 'sekizai.context_processors.sekizai',
 )
 
 INSTALLED_APPS = (
@@ -134,6 +137,11 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'django_tables2',
+    'toptalkers',
+    )
+
+"""
     'cms',
     'mptt',
     'menus',
@@ -162,7 +170,7 @@ INSTALLED_APPS = (
     'djangocms_utils',
     'simple_translation',
     'tagging',
-)
+"""
 
 CMS_TEMPLATES = (
     ('base.html', 'Base Template'),
@@ -202,6 +210,9 @@ THUMBNAIL_PROCESSORS = (
 JQUERY_JS = STATIC_URL + 'jquery-ui-1.8.18/js/jquery-1.7.1.min.js'
 JQUERY_UI_JS = STATIC_URL + 'jquery-ui-1.8.18/js/jquery-ui-1.8.18.custom.min.js' 
 JQUERY_UI_CSS = STATIC_URL + 'jquery-ui-1.8.18/css/smoothness/jquery-ui-1.8.18.custom.css'
+
+TOPTALKERS_ROUTER = 'br01.mtg.afnog.org'
+TOPTALKERS_COMMUNITY = 'AfNOGsnmp'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

@@ -5,6 +5,8 @@ from django.conf import settings
 from django.contrib import admin
 admin.autodiscover()
 
+from toptalkers.views import TableView
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'example_app.views.home', name='home'),
@@ -16,7 +18,9 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     #(r'^sr/', include('example_app.urls')),
-    url(r'^', include('cms.urls')),
+    # url(r'^', include('cms.urls')),
+    
+    (r'^$', TableView.as_view()),
 )
 
 if settings.DEBUG:
