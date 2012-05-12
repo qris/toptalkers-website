@@ -2,14 +2,46 @@
 
 import django_tables2 as tables
 
+class TableDataWithOrderingBugFix(tables.tables.TableData):
+    def _translate_aliases_to_accessors(self, aliases):
+        """
+        Translate from order by aliases to column accessors.
+        """
+        from django_tables2.utils import OrderBy, OrderByTuple
+        import itertools
+        columns = (self.table.columns[OrderBy(alias).bare] for alias in aliases)
+        # columns = (c.accessor for c in columns)
+        return OrderByTuple(itertools.chain(*((c.accessor,) for c in columns)))
+
+    	# def order_by(self, aliases):
+        """
+        Order the data based on order by aliases (prefixed column names) in the
+        table.
+
+        :param aliases: optionally prefixed names of columns ('-' indicates
+                        descending order) in order of significance with
+                        regard to data ordering.
+        :type  aliases: :class:`~.utils.OrderByTuple`
+        """
+        # import pdb; pdb.set_trace()
+        accessors = self._translate_aliases_to_accessors(aliases)
+        if hasattr(self, 'queryset'):
+            translate = lambda accessor: accessor.replace(Accessor.SEPARATOR, QUERYSET_ACCESSOR_SEPARATOR)
+            self.queryset = self.queryset.order_by(*(translate(a) for a in accessors))
+        else:
+            self.list.sort(cmp=accessors.cmp)
+
 class TopTalkers(tables.Table):
+	TableDataClass = TableDataWithOrderingBugFix
+
+	rank = tables.Column()
 	protocol = tables.Column()
 	source_address = tables.Column(accessor='src.textaddr')
 	source_port = tables.Column(accessor='src.port')
 	dest_address = tables.Column(accessor='dst.textaddr')
 	dest_port = tables.Column(accessor='dst.port')
 	bytes = tables.Column()
-
+	
 	class Meta:
 		attrs = {'class': 'paleblue'}    
 
@@ -41,7 +73,8 @@ class TableView(TemplateView):
 			pass
 
 		class Address(object):
-			pass
+			def __str__(self):
+				return "%s:%s" % (self.textaddr, self.port)
 
 		if errorIndication is not None:
 			raise Exception(errorIndication)
@@ -68,6 +101,7 @@ class TableView(TemplateView):
 
 			if rowIndex == len(talkers):
 				row = Row()
+				row.rank = rowIndex + 1
 				row.src = Address()
 				row.dst = Address()
 				row.nh = Address()
@@ -144,4 +178,12 @@ class TableView(TemplateView):
 		RequestConfig(self.request).configure(table)				
 
 		context['table'] = table
+		
+		from pygooglechart import PieChart3D
+		chart = PieChart3D(500, 200)
+		chart.add_data([int(t.bytes) for t in talkers])
+		# chart.set_pie_labels(["%s-%s" % (t.src, t.dst) for t in talkers])
+		chart.set_pie_labels(["%s" % t.rank for t in talkers])
+		context['chart'] = chart.get_url()
+
 		return context
